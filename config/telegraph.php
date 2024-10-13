@@ -36,7 +36,7 @@ return [
      *
      * For reference, see https://core.telegram.org/bots/api#using-a-local-bot-api-server
      */
-    'custom_webhook_domain' => 'https://4637-37-115-25-38.ngrok-free.app',
+    'custom_webhook_domain' => env('TELEGRAM_WEBHOOK_DOMAIN', 'webhook'),
 
     /*
      * If enabled, Telegraph dumps received
