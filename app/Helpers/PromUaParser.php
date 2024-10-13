@@ -2,6 +2,7 @@
 
 namespace App\Helpers;
 
+use App\Data\ProductData;
 use GraphQL\Client;
 use GraphQL\Exception\QueryError;
 use GraphQL\Query;
@@ -34,14 +35,18 @@ class PromUaParser
             $results = $client->runQuery($gql, true, ['productId' => $id]);
         }
         catch (QueryError $exception) {
-            print_r($exception->getErrorDetails());
-            exit;
+            Log::error("PromUaParser@getInfoOrNullAboutProductById ".var_export($exception->getErrorDetails(), 1));
+            return null;
         }
 
+        try {
+            $data = $results->getData();
 
-        $data = $results->getData();
-
-        return $data['product'];
+            return ProductData::validate($data['product']);
+        }catch (\Throwable $throwable){
+            Log::error("PromUaParser@getInfoOrNullAboutProductById Message:{$throwable->getMessage()}, file:{$throwable->getFile()}, line: {$throwable->getLine()}");
+            return null;
+        }
 
     }
 }
